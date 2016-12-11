@@ -6,6 +6,9 @@
 # add in a with statement to auto close the file afterwards
 # further error checking to make sure input is a number and not out of range of the columns
 
+import datetime as dt
+
+
 file = input('Enter csv name:')
 if file == '' : file = 'csv_seperate_test_data.csv'
 
@@ -27,10 +30,11 @@ for line in csv_handle:
 	else:
 		sorted_info[line_parts[seperate_by]] = [line]
 
-
+today = dt.date.today()
+formatted_date = "{month}-{day}-{year}".format(month=today.month, day=today.day, year=today.year)
 
 for key in sorted_info.keys():
-	file_name = key + '.csv'
+	file_name = "{key}_{date}.csv".format(key=key, date=formatted_date)
 	file_handle = open(file_name, 'w')
 	format_line = '{}\n'
 
