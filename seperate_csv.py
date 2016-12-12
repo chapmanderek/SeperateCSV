@@ -1,8 +1,6 @@
 # CVS Seperater
 
 # Todo
-# date stamp each file
-# put them in a date stamped folder
 # add in a with statement to auto close the file afterwards
 # further error checking to make sure input is a number and not out of range of the columns
 
@@ -32,11 +30,11 @@ for line in csv_handle:
 
 today = dt.date.today()
 formatted_date = "{month}-{day}-{year}".format(month=today.month, day=today.day, year=today.year)
+dir_name = '{cwd}/{date}'.format(date=formatted_date, cwd=os.getcwd())
+if not os.path.exists(dir_name) : os.mkdir(dir_name)
 
 for key in sorted_info.keys():
-	dir_name = '{cwd}/{date}'.format(date=formatted_date, cwd=os.getcwd())
 	file_name = "{dn}/{key}_{date}.csv".format(key=key, date=formatted_date, dn=dir_name)
-	if not os.path.exists(dir_name) : os.mkdir(dir_name)
 	file_handle = open(file_name, 'w')
 	format_line = '{}\n'
 
