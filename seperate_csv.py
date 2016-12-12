@@ -7,7 +7,7 @@
 # further error checking to make sure input is a number and not out of range of the columns
 
 import datetime as dt
-
+import os
 
 file = input('Enter csv name:')
 if file == '' : file = 'csv_seperate_test_data.csv'
@@ -34,7 +34,9 @@ today = dt.date.today()
 formatted_date = "{month}-{day}-{year}".format(month=today.month, day=today.day, year=today.year)
 
 for key in sorted_info.keys():
-	file_name = "{key}_{date}.csv".format(key=key, date=formatted_date)
+	dir_name = '{cwd}/{date}'.format(date=formatted_date, cwd=os.getcwd())
+	file_name = "{dn}/{key}_{date}.csv".format(key=key, date=formatted_date, dn=dir_name)
+	if not os.path.exists(dir_name) : os.mkdir(dir_name)
 	file_handle = open(file_name, 'w')
 	format_line = '{}\n'
 
