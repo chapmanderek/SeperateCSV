@@ -7,6 +7,21 @@
 
 import datetime as dt
 import os
+import xlwt
+
+def xcel_output(filename, header, data):
+	book = xlwt.Workbook()
+	sheet = book.add_sheet('sheet1')
+
+	column = 0
+	for each in header.split(','):
+		sheet.write(0, column, each)
+		column += 1
+
+	# for each in range(len(sorted_info[key])):
+	# 	file_handle.write(format_line.format(sorted_info[key][each]))
+
+	book.save(filename)
 
 # get filename and column to seperate the file by from user
 file = input('Enter csv name:')
@@ -16,14 +31,13 @@ csv_handle = open(file)
 seperate_by = int(input('Enter column to seperate by:'))
 if seperate_by == None : seperate_by = 1
 
-# read info but get rid of trailing new line characters
+# read in the header but get rid of trailing new line characters
 header = csv_handle.readline().rstrip()
 
-# seperate the info into a dict of lists of strings
+# seperate the rest of the info into a dict of lists of strings
 sorted_info = dict()
 for line in csv_handle:
 	line = line.rstrip()
-	print(type(line))
 	line_parts = line.split(',')
 	line_parts = [each.lstrip() for each in line_parts]
 	if line_parts[seperate_by] in sorted_info.keys():
@@ -39,6 +53,13 @@ if not os.path.exists(dir_name) : os.mkdir(dir_name)
 
 # create the individual sheets
 for key in sorted_info.keys():
+
+	# new way exporting to excel
+	file_name = "{dn}/{key}_{date}.xls".format(key=key, date=formatted_date, dn=dir_name)
+	xcel_output(file_name, header, sorted_info[key])
+	
+
+	# old way exporting to csvs
 	file_name = "{dn}/{key}_{date}.csv".format(key=key, date=formatted_date, dn=dir_name)
 	file_handle = open(file_name, 'w')
 	format_line = '{}\n'
@@ -47,3 +68,5 @@ for key in sorted_info.keys():
 	for each in range(len(sorted_info[key])):
 		file_handle.write(format_line.format(sorted_info[key][each]))
 	file_handle.close()
+
+xcel_output('stuff.xls', 'head', 'otherstuff, sadfds, asdf')
