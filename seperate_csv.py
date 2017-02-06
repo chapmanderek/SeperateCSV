@@ -24,16 +24,27 @@ def open_py_output(filename, header, data):
 
 	wbook.save(filename)
 
-# get filename and column to seperate the file by from user
+# get filename
 file = input('Enter csv name:')
 if file == '' : file = 'csv_seperate_test_data.csv'
 csv_handle = open(file)
 
-seperate_by = int(input('Enter column to seperate by:'))
-if seperate_by == None : seperate_by = 1
-
 # read in the header but get rid of trailing new line characters
 header = csv_handle.readline().rstrip()
+
+# get column to seperate the file by from user error check so exits gracefully
+seperate_by = input('Enter column to seperate by (default is 1):')
+if seperate_by == '' : seperate_by = 1
+elif seperate_by.isdigit() == True : seperate_by = int(seperate_by)
+else:
+	print('Not valid input for some reason')
+	exit()
+
+# assume user means the 1st column when they say 1 and not the computer 1 which would be the 2nd column 
+# make sure the number is a valid column and exit gracefully if not
+seperate_by -= 1
+if len(header.split(',')) < seperate_by or seperate_by < 0 : print('The number you entered to seperate by was no good'); exit()
+
 
 # seperate the rest of the info into a dict of lists of strings
 sorted_info = dict()
