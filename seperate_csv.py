@@ -8,20 +8,45 @@
 import datetime as dt
 import os
 import xlwt
+import openpyxl as ox
+
+def open_py_output(filename, header, data):
+	oxbook = ox.Workbook()
+	oxsheet = oxbook.active
+
+	header_parts = [ each.lstrip().rstrip() for each in header.split(',') ]
+	oxsheet.append(header_parts)
+
+	# split data list into individual rows then split that into a list of indvidual cells
+	for row in data:
+		row_parts = [ each.lstrip().rstrip() for each in row.split(',') ]
+		oxsheet.append(row_parts)
+
+	oxbook.save(filename)
 
 def xcel_output(filename, header, data):
+
 	book = xlwt.Workbook()
 	sheet = book.add_sheet('sheet1')
 
+	# write header
 	column = 0
 	for each in header.split(','):
 		sheet.write(0, column, each)
 		column += 1
 
-	# for each in range(len(sorted_info[key])):
-	# 	file_handle.write(format_line.format(sorted_info[key][each]))
+	# # write individual entries  row would be the each counter  sheet(row, column, info)
+	row = 1
+	for each in range(len(data)):
+		column = 0
+		row_parts = data[each].split(',')
+		print(row_parts)
+		for cell in row_parts:
+			sheet.write(row, column, cell)
+			column += 1
 
 	book.save(filename)
+
 
 # get filename and column to seperate the file by from user
 file = input('Enter csv name:')
@@ -55,18 +80,18 @@ if not os.path.exists(dir_name) : os.mkdir(dir_name)
 for key in sorted_info.keys():
 
 	# new way exporting to excel
-	file_name = "{dn}/{key}_{date}.xls".format(key=key, date=formatted_date, dn=dir_name)
-	xcel_output(file_name, header, sorted_info[key])
+	file_name = "{dn}/{key}_{date}.xlsx".format(key=key, date=formatted_date, dn=dir_name)
+	# xcel_output(file_name, header, sorted_info[key])
+	open_py_output(file_name, header, sorted_info[key])
 	
 
 	# old way exporting to csvs
-	file_name = "{dn}/{key}_{date}.csv".format(key=key, date=formatted_date, dn=dir_name)
-	file_handle = open(file_name, 'w')
-	format_line = '{}\n'
+	# file_name = "{dn}/{key}_{date}.csv".format(key=key, date=formatted_date, dn=dir_name)
+	# file_handle = open(file_name, 'w')
+	# format_line = '{}\n'
 
-	file_handle.write(format_line.format(header))
-	for each in range(len(sorted_info[key])):
-		file_handle.write(format_line.format(sorted_info[key][each]))
-	file_handle.close()
+	# file_handle.write(format_line.format(header))
+	# for each in range(len(sorted_info[key])):
+	# 	file_handle.write(format_line.format(sorted_info[key][each]))
+	# file_handle.close()
 
-xcel_output('stuff.xls', 'head', 'otherstuff, sadfds, asdf')
