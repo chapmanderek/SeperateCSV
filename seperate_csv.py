@@ -10,20 +10,21 @@
 import datetime as dt
 import os
 import xlwt
-import openpyxl as oxcel
+import openpyxl as opx
+from openpyxl.styles import NamedStyle, Font, Alignment, PatternFill
 from copy import copy
 
-header_style = oxcel.styles.NamedStyle(name='header_style')
-header_style.font = oxcel.styles.Font(bold=True, size=14, name='Arial')
-header_style.alignment = oxcel.styles.Alignment(horizontal='center')
-header_style.fill = oxcel.styles.PatternFill('solid', 'DCDCDC')
+header_style = NamedStyle(name='header_style')
+header_style.font = Font(bold=True, size=14, name='Arial')
+header_style.alignment = Alignment(horizontal='center')
+header_style.fill = PatternFill('solid', 'DCDCDC')
 
 # header_style.style = '40 % - Accent6'
 
-# alignment = oxcel.style.Alignment(horizontal='center')
+# alignment = opx.style.Alignment(horizontal='center')
 
 def open_py_output(filename, header, data):
-	wbook = oxcel.Workbook()
+	wbook = opx.Workbook()
 	wsheet = wbook.active
 	wbook.add_named_style(header_style)
 
@@ -31,12 +32,8 @@ def open_py_output(filename, header, data):
 	header_width = len(header_parts)
 	wsheet.append(header_parts)
 
-	print(wsheet['A1'].value)
 	for row in wsheet.iter_rows():
 		for cell in row:
-			# cell.font = oxcel.styles.Font(bold=True, size = 14, name='Trebuchet MS')
-			# cell.fill = oxcel.styles.PatternFill('solid', 'DCDCDC')
-			# cell.style = '40 % - Accent6'
 			cell.style = header_style
 
 	# for column in len(header_parts)
