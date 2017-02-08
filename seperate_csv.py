@@ -11,22 +11,26 @@ import datetime as dt
 import os
 import xlwt
 import openpyxl as opx
-from openpyxl.styles import NamedStyle, Font, Alignment, PatternFill
-from copy import copy
+from openpyxl.styles import NamedStyle, Font, Alignment, PatternFill, Border, Side
 
 header_style = NamedStyle(name='header_style')
 header_style.font = Font(bold=True, size=14, name='Arial')
 header_style.alignment = Alignment(horizontal='center')
 header_style.fill = PatternFill('solid', 'DCDCDC')
+header_style.border = Border(bottom=Side(border_style='thin'))
 
-# header_style.style = '40 % - Accent6'
+row_style = NamedStyle(name='row_style')
+row_style.font = Font(bold=True, size=12, name='Trebuchet')
+row_style.alignment = Alignment(horizontal='left')
+row_style.border = Border(bottom=Side(border_style='thin'))
 
-# alignment = opx.style.Alignment(horizontal='center')
+
 
 def open_py_output(filename, header, data):
 	wbook = opx.Workbook()
 	wsheet = wbook.active
 	wbook.add_named_style(header_style)
+	wbook.add_named_style(row_style)
 
 	header_parts = [ each.lstrip().rstrip() for each in header.split(',') ]
 	header_width = len(header_parts)
@@ -36,13 +40,18 @@ def open_py_output(filename, header, data):
 		for cell in row:
 			cell.style = header_style
 
-	# for column in len(header_parts)
-
-	# split data list into individual rows then split that into a list of indvidual cellsp
+	# split data list into individual rows then append each on to the spreadsheet
+	row_count = 1
 	for row in data:
 		row_parts = [ each.lstrip().rstrip() for each in row.split(',') ]
 		wsheet.append(row_parts)
+		row_count += 1
 
+	# add stle for data rows
+	for row in wsheet.iter_rows(min_row=2, max_row=row_count):
+		for cell in row:
+			cell.style = row_style
+	
 	wbook.save(filename)
 
 # get filename
