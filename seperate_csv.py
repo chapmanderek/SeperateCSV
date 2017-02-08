@@ -1,9 +1,7 @@
 # CVS Seperater
 
 # Todo
-# add in a with statement to auto close the file afterwards
 # loop back the opening section if the input is invalid or out of bounds, add in a q for quit option
-# sylize the header row and then the following rows
 # set page layout to landscape
 # turn on fit to width 1 page
 
@@ -23,8 +21,6 @@ row_style = NamedStyle(name='row_style')
 row_style.font = Font(bold=True, size=12, name='Trebuchet')
 row_style.alignment = Alignment(horizontal='left')
 row_style.border = Border(bottom=Side(border_style='thin'))
-
-
 
 def open_py_output(filename, header, data):
 	wbook = opx.Workbook()
@@ -52,6 +48,9 @@ def open_py_output(filename, header, data):
 		for cell in row:
 			cell.style = row_style
 	
+	wsheet.print_options.horizontalcentered = True
+	wsheet.page_setup.orientation = "landscape"
+
 	wbook.save(filename)
 
 # get filename
