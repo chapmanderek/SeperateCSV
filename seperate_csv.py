@@ -2,8 +2,7 @@
 
 # Todo
 # loop back the opening section if the input is invalid or out of bounds, add in a q for quit option
-# set page layout to landscape
-# turn on fit to width 1 page
+
 
 import datetime as dt
 import os
@@ -12,7 +11,7 @@ import openpyxl as opx
 from openpyxl.styles import NamedStyle, Font, Alignment, PatternFill, Border, Side
 
 header_style = NamedStyle(name='header_style')
-header_style.font = Font(bold=True, size=14, name='Arial')
+header_style.font = Font(bold=True, size=12, name='Arial')
 header_style.alignment = Alignment(horizontal='center')
 header_style.fill = PatternFill('solid', 'DCDCDC')
 header_style.border = Border(bottom=Side(border_style='thin'))
@@ -48,14 +47,21 @@ def open_py_output(filename, header, data):
 		for cell in row:
 			cell.style = row_style
 	
+	for column in wsheet.columns:
+		col_max_len = max( [len(cell.value) for cell in column] )
+		if col_max_len < 10 : col_max_len = 10
+		if col_max_len > 30 : col_max_len = 30
+		wsheet.column_dimensions[column[0].column].width = col_max_len*1.1
+
 	wsheet.print_options.horizontalcentered = True
 	wsheet.page_setup.orientation = "landscape"
+	wsheet.page_setup.fitToWidth = 1
 
 	wbook.save(filename)
 
 # get filename
 file = input('Enter csv name:')
-if file == '' : file = 'csv_seperate_test_data.csv'
+if file == '' : file = 'test_data.csv'
 csv_handle = open(file)
 
 # read in the header but get rid of trailing new line characters
