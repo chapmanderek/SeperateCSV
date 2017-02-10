@@ -55,7 +55,7 @@ def open_py_output(filename, header, data):
 
 	wsheet.print_options.horizontalcentered = True
 	wsheet.page_setup.orientation = "landscape"
-	wsheet.page_setup.fitToWidth = 1
+	wsheet.page_setup.fitToPage = True
 
 	wbook.save(filename)
 
