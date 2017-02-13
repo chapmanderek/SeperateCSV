@@ -2,7 +2,9 @@
 
 # Todo
 # loop back the opening section if the input is invalid or out of bounds, add in a q for quit option
-
+# allow importing of excel files
+# ask for user input on output settings, # of pages wide etc
+# handle blanks in the selected column gracefully
 
 import datetime as dt
 import os
@@ -58,6 +60,7 @@ def open_py_output(filename, header, data):
 	wsheet.page_setup.fitToPage = True
 
 	wbook.save(filename)
+	return (row_count-1)
 
 # get filename
 file = input('Enter csv name:')
@@ -83,7 +86,9 @@ if len(header.split(',')) < seperate_by or seperate_by < 0 : print('The number y
 
 # seperate the rest of the info into a dict of lists of strings
 sorted_info = dict()
+lines_count= 0
 for line in csv_handle:
+	lines_count += 1
 	line = line.rstrip()
 	line_parts = line.split(',')
 	line_parts = [each.lstrip() for each in line_parts]
@@ -99,8 +104,14 @@ dir_name = '{cwd}/{date}'.format(date=formatted_date, cwd=os.getcwd())
 if not os.path.exists(dir_name) : os.mkdir(dir_name)
 
 # create the individual sheets
+rows_written = 0
+sheets_created = 0
 for key in sorted_info.keys():
 	file_name = "{dn}/{key}_{date}.xlsx".format(key=key, date=formatted_date, dn=dir_name)
-	open_py_output(file_name, header, sorted_info[key])
+	rows_written += open_py_output(file_name, header, sorted_info[key])
+	sheets_created += 1
+
+print('\n{0} records were read in.'.format(lines_count))
+print('{0} records were written to {1} different sheets. \n'.format(rows_written, sheets_created))
 
 
