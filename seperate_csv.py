@@ -2,9 +2,8 @@
 
 # Todo
 # change user input so it only repeats the section that has a problem
-# allow importing of excel files
+# allow importing of excel files - currently doesnt handle fields with a comma
 # ask for user input on output settings, # of pages wide etc
-# handle blanks in the selected column gracefully
 # add date stamp to header or footer
 
 import datetime as dt
@@ -21,6 +20,7 @@ header_style.border = Border(bottom=Side(border_style='thin'))
 
 row_style = NamedStyle(name='row_style')
 row_style.font = Font(bold=True, size=12, name='Trebuchet')
+row_style.alignment = Alignment(horizontal='center')
 row_style.alignment = Alignment(horizontal='left')
 row_style.border = Border(bottom=Side(border_style='thin'))
 
@@ -51,11 +51,17 @@ def open_py_output(filename, header, data):
 			cell.style = row_style
 	
 	for column in wsheet.columns:
-		col_max_len = max( [len(cell.value) for cell in column] )
+		col_max_len = max( [len(cell.value) for cell in column if cell.value is not None] )
+
 		if col_max_len < 10 : col_max_len = 10
 		if col_max_len > 30 : col_max_len = 30
 		wsheet.column_dimensions[column[0].column].width = col_max_len*1.1
 
+	# put date stamp in right header   &D
+	wsheet.oddHeader.right.text = "&D"
+	wsheet.oddHeader.right.font_size = 14
+
+	# worksheet print options
 	wsheet.print_options.horizontalcentered = True
 	wsheet.page_setup.orientation = "landscape"
 	wsheet.page_setup.fitToPage = True
